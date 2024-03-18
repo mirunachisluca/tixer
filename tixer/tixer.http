@@ -1,0 +1,6 @@
+@tixer_HostAddress = http://localhost:5230
+
+GET {{tixer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
