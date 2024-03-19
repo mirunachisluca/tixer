@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tixer", "tixer\tixer.csproj", "{2786AD82-A821-4DFB-A961-704EEBBEA190}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tixer", "Tixer\Tixer.csproj", "{2786AD82-A821-4DFB-A961-704EEBBEA190}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

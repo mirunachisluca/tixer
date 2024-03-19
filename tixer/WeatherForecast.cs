@@ -1,4 +1,4 @@
-namespace tixer
+namespace Tixer
 {
     public class WeatherForecast
     {
