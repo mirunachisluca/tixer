@@ -12,8 +12,8 @@ using Tixer.Context;
 namespace Tixer.Migrations
 {
     [DbContext(typeof(TixerDbContext))]
-    [Migration("20240318200601_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240319184727_CreateTicketsTable")]
+    partial class CreateTicketsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,12 +27,16 @@ namespace Tixer.Migrations
 
             modelBuilder.Entity("Tixer.Models.Ticket", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
@@ -46,7 +50,9 @@ namespace Tixer.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id");
 
