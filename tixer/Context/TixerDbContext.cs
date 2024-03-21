@@ -19,5 +19,25 @@ namespace Tixer.Context
                 .Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
+
+        public override int SaveChanges()
+        {
+            SetUpdatedAtColumn();
+
+            return base.SaveChanges();
+        }
+
+        private void SetUpdatedAtColumn()
+        {
+            var entitiesModified = ChangeTracker
+                .Entries()
+                .Where(e => e.Entity is Ticket && e.State == EntityState.Modified)
+                .Select(x => x.Entity as Ticket);
+
+            foreach (var entity in entitiesModified)
+            {
+                entity.UpdatedAt = DateTime.UtcNow;
+            }
+        }
     }
 }
