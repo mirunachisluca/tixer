@@ -1,4 +1,6 @@
-﻿using Tixer.Models;
+﻿using Tixer.Helpers;
+using Tixer.Models;
+using Tixer.ResourceParameters;
 
 namespace Tixer.Repositories
 {
@@ -6,7 +8,7 @@ namespace Tixer.Repositories
     {
         Ticket? GetTicket(string id);
 
-        IEnumerable<Ticket> GetTickets();
+        PagedList<Ticket> GetTickets(TicketResourceParameters parameters);
 
         void AddTicket(Ticket ticket);
 

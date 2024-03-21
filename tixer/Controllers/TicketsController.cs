@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using Tixer.DTOs;
 using Tixer.Helpers;
 using Tixer.Models;
+using Tixer.ResourceParameters;
 using Tixer.Services;
 
 namespace Tixer.Controllers
@@ -21,6 +23,7 @@ namespace Tixer.Controllers
         }
 
         [HttpGet("{id}", Name = "GetTicket")]
+        [Produces("application/json")]
         public ActionResult<TicketDto> GetTicket(string id)
         {
             var ticket = _ticketsService.GetTicket(id);
@@ -34,14 +37,26 @@ namespace Tixer.Controllers
         }
 
         [HttpGet(Name = "GetAllTickets")]
-        public ActionResult<IEnumerable<TicketDto>> GetAllTickets()
+        [Produces("application/json")]
+        public ActionResult<IEnumerable<TicketDto>> GetAllTickets([FromQuery] TicketResourceParameters parameters)
         {
-            var tickets = _ticketsService.GetTickets();
+            var tickets = _ticketsService.GetTickets(parameters);
+
+            var paginationMetadata = new
+            {
+                totalCount = tickets.TotalCount,
+                pageSize = tickets.PageSize,
+                currentPage = tickets.CurrentPage,
+                totalPages = tickets.TotalPages
+            };
+
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
 
             return Ok(_mapper.Map<IEnumerable<TicketDto>>(tickets));
         }
 
         [HttpPost(Name = "CreateTicket")]
+        [Consumes("application/json")]
         public ActionResult CreateTicket(TicketToInsertDto ticket)
         {
             var ticketEntity = _mapper.Map<Ticket>(ticket);
@@ -56,6 +71,7 @@ namespace Tixer.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateTicket")]
+        [Consumes("application/json")]
         public ActionResult UpdateTicket(string id, [FromBody] TicketToUpdateDto ticket)
         {
             var ticketEntity = _ticketsService.GetTicket(id);

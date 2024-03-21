@@ -1,5 +1,7 @@
 ﻿using Tixer.Context;
+using Tixer.Helpers;
 using Tixer.Models;
+using Tixer.ResourceParameters;
 
 namespace Tixer.Repositories
 {
@@ -17,9 +19,45 @@ namespace Tixer.Repositories
             return _context.Tickets.Where(x => x.PublicId.Equals(id)).FirstOrDefault();
         }
 
-        public IEnumerable<Ticket> GetTickets()
+        public PagedList<Ticket> GetTickets(TicketResourceParameters parameters)
         {
-            return _context.Tickets.AsEnumerable();
+            ArgumentNullException.ThrowIfNull(parameters);
+
+            var collection = _context.Tickets.AsQueryable();
+
+            if (!string.IsNullOrEmpty(parameters.SearchQuery))
+            {
+                var searchQuery = parameters.SearchQuery.Trim();
+
+                collection = collection.Where(e => e.Title.ToLower().Contains(searchQuery.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(parameters.OrderBy))
+            {
+                var orderByTrimmed = parameters.OrderBy.Trim();
+                var reversedOrder = orderByTrimmed.Contains(" desc") || orderByTrimmed.Contains(" descending");
+
+                var firstWhiteSpace = orderByTrimmed.IndexOf(' ');
+                if (firstWhiteSpace != -1)
+                {
+                    orderByTrimmed = orderByTrimmed.Substring(0, firstWhiteSpace);
+                }
+
+                switch (orderByTrimmed)
+                {
+                    case "title":
+                        collection = reversedOrder ? collection.OrderByDescending(e => e.Title) : collection.OrderBy(e => e.Title);
+                        break;
+                    case "price":
+                        collection = reversedOrder ? collection.OrderByDescending(e => e.Price) : collection.OrderBy(e => e.Price);
+                        break;
+                    default: break;
+                }
+            }
+
+            var pagedCollection = collection.Skip(parameters.PageSize * (parameters.PageNumber - 1)).Take(parameters.PageSize);
+
+            return new PagedList<Ticket>(pagedCollection.ToList(), collection.Count(), parameters.PageNumber, parameters.PageSize);
         }
 
         public void AddTicket(Ticket ticket)

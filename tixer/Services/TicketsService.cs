@@ -1,5 +1,7 @@
-﻿using Tixer.Models;
+﻿using Tixer.Helpers;
+using Tixer.Models;
 using Tixer.Repositories;
+using Tixer.ResourceParameters;
 
 namespace Tixer.Services
 {
@@ -19,9 +21,9 @@ namespace Tixer.Services
             return ticket;
         }
 
-        public IEnumerable<Ticket> GetTickets()
+        public PagedList<Ticket> GetTickets(TicketResourceParameters parameters)
         {
-            var tickets = _ticketsRepository.GetTickets();
+            var tickets = _ticketsRepository.GetTickets(parameters);
 
             return tickets;
         }

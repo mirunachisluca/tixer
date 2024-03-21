@@ -1,6 +1,32 @@
-@tixer_HostAddress = http://localhost:5230
+@tixer_HostAddress = https://localhost:44397
 
-GET {{tixer_HostAddress}}/weatherforecast/
+//Get All tickets
+GET {{tixer_HostAddress}}/api/tickets
 Accept: application/json
 
 ###
+
+//Get single ticket by id
+GET {{tixer_HostAddress}}/api/tickets/7l0tbn5llk
+Accept: application/json
+
+//Create new ticket
+POST {{tixer_HostAddress}}/api/tickets
+Accept: application/json
+Content-Type: application/json
+
+{
+    "title": "Ticket 1",
+    "price": 20
+}
+
+###
+
+//Update existing ticket
+PUT {{tixer_HostAddress}}/api/tickets/7l0tbn5llk
+Content-Type: application/json
+
+{
+    "title": "Ticket 1",
+    "price": 21
+}
