@@ -12,6 +12,7 @@ services:
     volumes:
       - ./docker-data/psql:/var/lib/postgresql/data
   pgadmin:
+    user: root
     image: dpage/pgadmin4
     container_name: pgadmin
     restart: always
